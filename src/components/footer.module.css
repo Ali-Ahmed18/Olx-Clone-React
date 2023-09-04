@@ -1,0 +1,7 @@
+
+@media screen and (max-width:800px){
+    .footerList{
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important                                                                                                                                                                                                                                                                                                                                                                                                                                                           ;
+    }
+}   
