@@ -15,7 +15,7 @@ function ItemCard({image,price,text,address,time}) {
 	                            </svg>
                             </button>
                         </Typography>
-                        <Typography >{text}</Typography>
+                        <Typography className='line-clamp-2'>{text}</Typography>
                         <Typography  className='text-gray-700 text-sm leading-6 mt-2'>{address}<br />{time}</Typography>
                     </div>
                 </div>

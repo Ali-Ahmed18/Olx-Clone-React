@@ -1,5 +1,5 @@
 import { Carousel } from "@material-tailwind/react";
-import { pic12 } from "../assets/images";
+import { pic12 } from "../assets/images.jsx";
 
 const CarouselCustomNavigation = () => {
     return (
