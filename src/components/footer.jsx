@@ -4,7 +4,7 @@ import styles from "./footer.module.css"
 function Footer() {
   return (
     <>
-            <div className={`flex justify-between py-5 w-[96%] mx-auto ${styles.footerList}`}>
+            <div className={`flex justify-between py-5 px-5 w-[100%] mx-auto ${styles.footerList} bg-[#EBEEEF]`}>
       
       <ul>
         <li className="font-bold text-sm mb-2">POPULAR CATEGORIES</li>

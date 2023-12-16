@@ -1,0 +1,19 @@
+.navv {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f4f3f3;
+}
+.topnav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 95%;
+    margin: 8px 13px;
+}
+.topicon {
+    color: #222;
+    text-decoration: none;
+}

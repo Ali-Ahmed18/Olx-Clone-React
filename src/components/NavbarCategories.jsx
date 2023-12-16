@@ -5,7 +5,7 @@ function NavbarCategories({responsive}) {
     return (
         <>
             <section className="border-b-2 py-3">
-                <ul className={`${responsive ? responsive : "hidden"} flex lg:flex gap-4 fs-3 text-sm w-[94%] mx-auto md:hidden`}>
+                <ul className={`${responsive ? responsive : "hidden"} flex lg:flex gap-4 fs-3 text-sm w-[94%] mx-auto`}>
                     <li><a className="flex gap-3 font-bold" href="#">All categories <img src={logo3} /></a></li>
                     <li><a href="#" >Mobile Phones</a></li>
                     <li><a href="#">Car</a></li>

@@ -34,7 +34,8 @@ import logo7 from "./icons/iconPlusSell.png"
 import logo8 from "./icons/iconSellBorder.png"
 import logo9 from "./icons/iconTwitter.png"
 import logo10 from "./icons/iconYoutube.png"
-
+import login from "./login1.png"
+import profilePic from "./icons/iconProfilePicture.png"
 export {
     pic1,
 pic2,
@@ -72,4 +73,6 @@ logo7,
 logo8,
 logo9,
 logo10,
+login,
+profilePic
 }

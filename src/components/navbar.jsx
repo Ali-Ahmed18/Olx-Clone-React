@@ -1,16 +1,47 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { pic10, logo3, logo7 } from "../assets/images"
 import "./nav.css"
 import NavbarCategories from './NavbarCategories'
+import { Link } from 'react-router-dom'
+import ProfileAvatar from './navbarAvatarDropDown'
+
+
 function MyNavbar() {
-  let [isStatus,setisStatus] = useState(false)
+  let [isStatus, setisStatus] = useState(false)
+  const token = localStorage.getItem("authToken")
+  const user = localStorage.getItem("authUser")
+  const auth = token && user
+
+  const handleResize = () => {
+    if (window.innerWidth > 1050) {
+      setisStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+
+  }, []);
+
+  const toggleMenu = () => {
+    setisStatus(!isStatus);
+    if (!isStatus) {
+      document.body.style.overflowY = 'hidden'
+    } else {
+      document.body.style.overflowY = 'auto'
+
+    }
+  };
+
+
   return (
     <nav className="navv bg-light">
       {/* <!-- ......TOPNAV...... --> */}
       <div className="topnav">
-        <div>
+        <Link to={"/"}>
           <img src={pic10} width="40px" alt="" />
-        </div>
+        </Link>
         <a href="#" className="topicon">
           <svg xmlns="http://www.w3.org/2000/svg" width="88.9" height="33" alt="OLX Motors" className="_1a6eed8f">
             <path stroke="rgba(0,0,0,0)"
@@ -51,14 +82,14 @@ function MyNavbar() {
       <div className="bottomnav">
 
         <div className="bottomnavwraper">
-          <a href="#">
+          <Link to={"/"} >
             <svg height="38" viewBox="0 0 36.289 20.768" alt="Olx logo" className="b28a1eb6">
               <path
                 d="M18.9 20.77V0h4.93v20.77zM0 10.39a8.56 8.56 0 1 1 8.56 8.56A8.56 8.56 0 0 1 0 10.4zm5.97-.01a2.6 2.6 0 1 0 2.6-2.6 2.6 2.6 0 0 0-2.6 2.6zm27 5.2l-1.88-1.87-1.87 1.88H25.9V12.3l1.9-1.9-1.9-1.89V5.18h3.27l1.92 1.92 1.93-1.92h3.27v3.33l-1.9 1.9 1.9 1.9v3.27z">
               </path>
             </svg>
-          </a>
-          <div className={`flex items-center collapseBox ${isStatus ? "w-[100%] shadow max-w-[350px]" :"w-[0] px-0 py-0"}`}>
+          </Link>
+          <div className={`flex items-center collapseBox ${isStatus ? "open" : " "}`}>
             <div className="searchboxwraper">
               <div className="searchbox">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 1024 1024" className="f1ab19e0">
@@ -84,21 +115,32 @@ function MyNavbar() {
               </div>
 
             </div>
+
             <div className="navBtn flex items-center gap-3 ml-10">
-              <a className="log underline" href="#">Login</a>
-              <button className='sellBtn'>
-                <span className='flex gap-1 items-center justify-center font-bold'><div className='flex-shrink-0'><img width={"13px"} src={logo7} alt="" /></div> Sell</span>
-              </button>
+
+              <Link to={"/sellproduct"}>
+                <button className='sellBtn'>
+                  <span className='flex gap-1 items-center justify-center font-bold'><div className='flex-shrink-0'><img width={"13px"} src={logo7} alt="" /></div> Sell</span>
+                </button>
+              </Link>
             </div>
-            {isStatus ? <NavbarCategories responsive="flex-col mt-[10px] overflow-auto"/> :false}
-            <div className="cross absolute top-2 right-3 font-extrabold text-lg cursor-pointer hidden" onClick={()=> setisStatus(!isStatus)}></div>
+            {isStatus ? <NavbarCategories responsive="flex-col mt-[10px] overflow" /> : false}
+            <div className="cross absolute top-2 right-3 font-extrabold text-lg cursor-pointer hidden" onClick={toggleMenu}></div>
           </div>
-          <div className="hamBurger" onClick={()=> setisStatus(!isStatus)} >
-                <div className="line"></div>
-                <div className="line"></div>
-                <div className="line"></div>
+
+
+          <div className={`overlay ${isStatus ? 'show' : ''}`} onClick={toggleMenu}></div>
+          <div className='flex items-center gap-4'>
+
+            {auth ? <ProfileAvatar /> : <Link to={"/login"} className='log underline'>Login</Link>}
+            <div className="hamBurger" onClick={toggleMenu}>
+              <div className={"line"}></div>
+              <div className={"line"}></div>
+              <div className={"line"}></div>
+            </div>
+
           </div>
-          
+
         </div>
       </div>
     </nav>
