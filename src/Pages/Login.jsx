@@ -23,29 +23,21 @@ function Login() {
     
     const loginHandler = async (e)=>{
         e.preventDefault()
-        // setLoading(true)
+        
         try{
             if(!email.current.value || !password.current.value){
                 alert("required fields are missing!")
-                // setLoading(false)
+                
                 return
             }
-            // const login = await axios.post("http://localhost:5000/api/v1/userlogin",{email :email.current.value,password: password.current.value})
-            // if(login.data.status){
-            //     localStorage.setItem("authToken",login.data.token)
-            //     localStorage.setItem("authUser",JSON.stringify(login.data.data))
-            //     setLoading(false)
-            //     navigate("/")
-            // }else{
-            //     alert(login.data.message)
-            //     setLoading(false)
-            // }
+           
+            
             dispatch(loginAction({email : email.current.value,password:password.current.value,navigate}))
 
 
 
         }catch(err){
-                // setLoading(false)
+                
                 console.log(err.message);
         }
     }

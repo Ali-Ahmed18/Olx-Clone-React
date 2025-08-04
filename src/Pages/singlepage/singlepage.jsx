@@ -47,7 +47,7 @@ function Singlepage() {
   useEffect(() => {
     (async () => {
       try {
-        dispatch(singlePostAction({id,userId: _id }))
+        dispatch(singlePostAction({id,userId: _id ,navigate}))
       } catch (err) {
         console.log(err.message);
             navigate(`/404Page`)
@@ -85,7 +85,7 @@ function Singlepage() {
               <div className='a545321  w-[100%] flex flex-col gap-[15px]'>
                
                   <Carousel >
-                    {data?.product_img_url.map((s, y) => {
+                    {data?.product_img_url?.map((s, y) => {
                       return (
                         <div key={y} className='w-[100%] flex-shrink-0 bg-black'>
                            <img className='w-[100%] h-[100%] object-contain' src={s}  />

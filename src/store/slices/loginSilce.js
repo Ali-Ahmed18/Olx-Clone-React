@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
+import BACKEND_URI from "../../../public/backend/uri.js"
 
 const initialState = {
     loading: false,
@@ -30,7 +31,7 @@ const loginSlice = createSlice({
 
 export const loginAction = createAsyncThunk("login/auth", async ({email , password , navigate},{rejectWithValue}) => {
     try{
-        const response = await axios.post("http://localhost:5000/api/v1/userlogin",{email,password})
+        const response = await axios.post(`${BACKEND_URI}/api/v1/userlogin`,{email,password})
         localStorage.setItem("authToken",response.data.token)
         localStorage.setItem("authUser",JSON.stringify(response.data.data))
         navigate("/")

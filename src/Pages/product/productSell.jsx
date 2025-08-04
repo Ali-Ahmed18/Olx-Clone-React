@@ -9,6 +9,7 @@ import authUser from "../../Services/authUser";
 import uploadImage from "../../Services/uploadImg";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
+import BACKEND_URI from "../../../public/backend/uri.js"
 
 
 
@@ -128,7 +129,7 @@ function ProductSell() {
 
       }
       const token = localStorage.getItem("authToken")
-      const createPost = await axios.post("http://localhost:5000/api/v1/post", objToSend, { headers: { Authorization: `Bearer ${token}` } })
+      const createPost = await axios.post(`${BACKEND_URI}/api/v1/post`, objToSend, { headers: { Authorization: `Bearer ${token}` } })
       setIsLoading(false)
 
       setImage1(null)

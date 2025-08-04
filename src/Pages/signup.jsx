@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react'
 import { login } from "../assets/images.jsx"
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URI from "../../public/backend/uri.js"
+
 
 function Signup() {
     const navigate = useNavigate()
@@ -30,7 +32,7 @@ function Signup() {
                 gender: gender.current.value
             }
 
-             const signup = await axios.post("http://localhost:5000/api/v1/createuser",objToSend)
+             const signup = await axios.post(`${BACKEND_URI}/api/v1/createuser`,objToSend)
            setIsLoading(false)
 
             if(signup.data.status){

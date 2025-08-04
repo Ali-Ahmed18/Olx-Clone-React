@@ -1,10 +1,11 @@
 import axios from "axios";
+import BACKEND_URI from "../../public/backend/uri.js"
 const uploadImage = async (imageFile) => {
   try {
     const formData = new FormData();
     formData.append("image", imageFile);
     const response = await axios.post(
-      "http://localhost:5000/api/v1/uploadimage",
+      `${BACKEND_URI}/api/v1/uploadimage`,
       formData,
       {
         headers: {

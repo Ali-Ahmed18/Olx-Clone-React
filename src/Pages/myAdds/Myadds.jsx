@@ -28,16 +28,16 @@ const MyAdds = () => {
   const uptData = (elem) => {
     let filteredData = ""
     if (data && data.length > 0) {
-      if(itemActiveAds == "status_ACTIVE"){
-        filteredData = elem.filter((item)=>{
+      if (itemActiveAds == "status_ACTIVE") {
+        filteredData = elem.filter((item) => {
           return item.isActive
         })
-      }else if(itemActiveAds == "status_inACTIVE"){
-        filteredData = elem.filter((item)=>{
+      } else if (itemActiveAds == "status_inACTIVE") {
+        filteredData = elem.filter((item) => {
           return !item.isActive
         })
-      }else{
-          filteredData = elem
+      } else {
+        filteredData = elem
       }
       const updatedData = filteredData.map(item => ({
         ...item,
@@ -48,10 +48,10 @@ const MyAdds = () => {
     }
   }
 
- 
+
   useEffect(() => {
     uptData(data);
-  }, [data,itemActiveAds]);
+  }, [data, itemActiveAds]);
 
   const toggleMenu = (index) => {
     setMyData(prevData => {
@@ -63,11 +63,45 @@ const MyAdds = () => {
     });
   };
 
+  //////////////////////////////////////
 
 
-  const del = ({_id,user_id}) => {
-   
-    dispatch(isDeletedAction({_id,user_id})); 
+  const LoadingSkeleton = () => (
+    <div className="border border-blue-gray-200 shadow rounded-md p-4 max-w-[100%] w-full mx-auto">
+      <div className="animate-pulse flex space-x-4">
+        <div className="bg-slate-700 h-[13vh] w-[100px] rounded bg-blue-gray-100"></div>
+        <div className="flex-1 space-y-3 py-1">
+          <div className="flex gap-2">
+            <div className="h-[2.5vh] bg-slate-700 w-[25%] rounded bg-blue-gray-100"></div>
+            <div className="h-[2.5vh] bg-slate-700 w-[10%] rounded bg-blue-gray-100"></div>
+          </div>
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <div className="h-[2vh] w-[15%] bg-slate-700 bg-blue-gray-100"></div>
+              <div className="h-[2vh] w-[25%] bg-slate-700 bg-blue-gray-100"></div>
+              <div className="h-[2vh] w-[10%] bg-slate-700 rounded bg-blue-gray-100"></div>
+              <div className="h-[2vh] w-[15%] bg-slate-700 bg-blue-gray-100"></div>
+            </div>
+            <div className="flex justify-between">
+              <div className="h-[4vh] w-[15%] bg-slate-700 bg-blue-gray-100"></div>
+              <div className="flex gap-1 w-[30%]">
+                <div className="h-[4vh] w-[50%] bg-slate-700 rounded bg-blue-gray-100"></div>
+                <div className="h-[4vh] w-[50%] bg-slate-700 rounded bg-blue-gray-100"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+
+  /////////////////////////////////////
+
+
+  const del = ({ _id, user_id }) => {
+
+    dispatch(isDeletedAction({ _id, user_id }));
   };
 
   return (
@@ -81,14 +115,14 @@ const MyAdds = () => {
           <input type="text" className="border-none focus:outline-none w-[100%]" placeholder="Search by Ad title" />
         </div>
         <div className="flex gap-3">
-          <button className={`px-[12px] py-[6px] rounded-full  ${itemActiveAds == null ? "border-blue-400 text-blue-500 font-bold bg-blue-100 border-[2px]" : "border-black border-[1px]"}`}  onClick={()=> navigate("/myads")} >View all ({data.length})</button>
+          <button className={`px-[12px] py-[6px] rounded-full  ${itemActiveAds == null ? "border-blue-400 text-blue-500 font-bold bg-blue-100 border-[2px]" : "border-black border-[1px]"}`} onClick={() => navigate("/myads")} >View all ({data.length})</button>
           <button className={`px-[12px] py-[6px] rounded-full ${itemActiveAds == "status_ACTIVE" ? "border-blue-400 text-blue-500 font-bold bg-blue-100 border-[2px]" : "border-[1px] border-black"}`} onClick={() => navigate("?filter=status_ACTIVE")}>{`Active Ads (${data.filter((x) => x.isActive).length})`}</button>
-          <button className={`px-[12px] py-[6px] rounded-full ${itemActiveAds == "status_inACTIVE" ? "border-blue-400 text-blue-500 font-bold bg-blue-100 border-[2px]" : "border-[1px] border-black"}`} onClick={()=> navigate("?filter=status_inACTIVE")} >{`InActive Ads (${data.filter((x) => !x.isActive).length})`}</button>
+          <button className={`px-[12px] py-[6px] rounded-full ${itemActiveAds == "status_inACTIVE" ? "border-blue-400 text-blue-500 font-bold bg-blue-100 border-[2px]" : "border-[1px] border-black"}`} onClick={() => navigate("?filter=status_inACTIVE")} >{`InActive Ads (${data.filter((x) => !x.isActive).length})`}</button>
           <button className={`px-[12px] py-[6px] rounded-full border-[1px] border-black`}>Pending ads (0)</button>
           <button className={`px-[12px] py-[6px] rounded-full border-[1px] border-black`}>Moderated ads (0)</button>
         </div>
         <h1 className="text-gray-500">Heavy discounts and packages <span className="text-blue-500"> View packages <ChevronRightIcon /></span></h1>
-        {myData.map((x, index) => {
+        {!loading ? myData.map((x, index) => {
           const { created_on, product_img_url, _id, description, price, isActive, user_id } = x;
           const date = new Date(created_on).toString().split(" ").slice(0, 4).join(" ");
           return (
@@ -111,16 +145,21 @@ const MyAdds = () => {
                   <span className="cursor-pointer hover:bg-blue-gray-100 rounded-full w-6 h-6 block" onClick={() => toggleMenu(index)}><MoreHorizIcon /></span>
                   {x.isMenu ? (
                     <ul className="absolute top-6 left-[-76px] bg-gray-100 cursor-pointer">
-                      <li className="border text-sm hover:bg-blue-gray-50 text-gray-800 py-1 border-b-black px-2" onClick={() => del({_id,user_id})}>Delete</li>
+                      <li className="border text-sm hover:bg-blue-gray-50 text-gray-800 py-1 border-b-black px-2" onClick={() => del({ _id, user_id })}>Delete</li>
                       <li className="border text-sm hover:bg-blue-gray-50 border-b-black text-gray-800 py-1 px-2 " onClick={() => { dispatch(isActiveAction({ _id, isActive })); toggleMenu(index) }}>{isActive ? "InActivate" : "Active"}</li>
-                      <li className="px-2 text-sm hover:bg-blue-gray-50 py-1 text-gray-800" onClick={()=> navigate(`updatepost?item=${_id}`)}>Update</li>
+                      <li className="px-2 text-sm hover:bg-blue-gray-50 py-1 text-gray-800" onClick={() => navigate(`updatepost?item=${_id}`)}>Update</li>
                     </ul>
                   ) : null}
                 </div>
               </div>
             </div>
           );
-        })}
+        }) :
+         <>
+         <LoadingSkeleton />
+          <LoadingSkeleton />
+         </>}
+
       </div>
     </>
   );

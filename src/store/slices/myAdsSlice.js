@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
+import BACKEND_URI from "../../../public/backend/uri.js"
 
 const initialState = {
-    loading: false,
+    loading: true,
     error: null,
     data: [],
 }
@@ -30,7 +31,7 @@ const myAdsSlice = createSlice({
 
 export const myAdsAction = createAsyncThunk("myAds/getMyAds", async (userId,{rejectWithValue}) => {
     try{
-        const response = await axios.get(`http://localhost:5000/api/v1/myads?user_id=${userId}`)
+        const response = await axios.get(`${BACKEND_URI}/api/v1/myads?user_id=${userId}`)
         return response.data
     }catch(err){
         return rejectWithValue(err.message)

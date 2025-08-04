@@ -9,7 +9,8 @@ import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { singlePostAction } from "../../store/slices/singlePostSlice.js";
-import singlePostSlice from "../../store/slices/singlePostSlice.js";
+import BACKEND_URI from "../../../public/backend/uri.js"
+import { updatePostAction } from "../../store/slices/updatePostSlice.js";
 
 
 
@@ -24,16 +25,19 @@ function UpdatePost() {
     const dispatch = useDispatch()
     const { _id } = JSON.parse(localStorage.getItem("authUser"))
     const navigate = useNavigate()
-    const { loading, error } = useSelector((state) => state.singlePostSlice);
+    const { data,loading, error } = useSelector((state) => state.singlePostSlice);
+    const { updateData,updateLoading, updateError } = useSelector((state) => state.updatePostSlice);
 
     useEffect(() => {
         if (!itemActiveAds || error) {
+            
             navigate("/404Page")
         } else {
 
             dispatch(singlePostAction({ id: itemActiveAds, userId: _id }))
         }
     }, [error])
+
     const imageHandler = (elem, index) => {
         if (elem == undefined) {
             return
@@ -63,7 +67,6 @@ function UpdatePost() {
     }
 
 
-    const whatSell = useRef()
     const title = useRef()
     const description = useRef()
     const price = useRef()
@@ -74,9 +77,8 @@ function UpdatePost() {
     const imageObj1 = useRef()
     const imageObj2 = useRef()
 
-    const postHandler = async (e) => {
+    const updateHandler = async (e) => {
         e.preventDefault()
-        setIsLoading(true)
         try {
 
             if (image1 == false || image2 == false) {
@@ -84,7 +86,7 @@ function UpdatePost() {
                 setIsLoading(false)
                 return
             }
-            if (!whatSell.current.value ||
+            if (
                 !title.current.value ||
                 !description.current.value ||
                 !price.current.value ||
@@ -94,17 +96,21 @@ function UpdatePost() {
                 !phoneNo.current.value
             ) {
                 alert("required fields are missing!")
-                setIsLoading(false)
                 return
             }
 
             if ((!imageObj1.current.files[0] || !image1) && (!imageObj2.current.files[0] || !image2)) {
                 alert("give at least one picture of product")
-                setIsLoading(false)
                 return
             }
+            console.log(title,
+                description,
+                price,
+                brand,
+                condition,
+                location,
+                phoneNo);
             const objToSend = {
-                whatSell: whatSell.current.value,
                 title: title.current.value,
                 description: description.current.value,
                 price: price.current.value,
@@ -112,8 +118,6 @@ function UpdatePost() {
                 condition: condition.current.value,
                 location: location.current.value,
                 phoneNo: phoneNo.current.value,
-                userId: userData._id,
-                userName: `${userData.first_name} ${userData.last_name}`
             }
 
             if ((imageObj1.current.files[0] || image1) && (imageObj2.current.files[0] || image2)) {
@@ -132,13 +136,10 @@ function UpdatePost() {
                 objToSend.productImgUrl = [imageUrl]
 
             }
-            const token = localStorage.getItem("authToken")
-            const createPost = await axios.post("http://localhost:5000/api/v1/post", objToSend, { headers: { Authorization: `Bearer ${token}` } })
-            setIsLoading(false)
-
+          console.log(objToSend);
+            // dispatch(updatePostAction({id: itemActiveAds, formData : objToSend}))
             setImage1(null)
             setImage2(null)
-            whatSell.current.value = ""
             title.current.value = ""
             description.current.value = ""
             price.current.value = ""
@@ -174,7 +175,7 @@ function UpdatePost() {
                 </div>
             </nav>
                 <p className="text-center mt-3 font-bold text text-gray-900">UPDATE YOUR AD</p>
-                <form onSubmit={postHandler} className="border-[1px] w-[80%] m-auto rounded border-gray-500 mt-3">
+                <form onSubmit={updateHandler} className="border-[1px] w-[80%] m-auto rounded border-gray-500 mt-3">
                     <div className="p-[10px] border-gray-500 border-b-[1px]">
                         <h1 className="font-bold text-gray-900">WHAT TYPE CATEGORY</h1>
                         <p className="text-sm">Sell / Products</p>
@@ -183,22 +184,22 @@ function UpdatePost() {
                         <h1 className="text-gray-900">UPDATE SOME DETAILS</h1>
                         <div>
                             <p className="text-xs font-thin">Update title</p>
-                            <input ref={title} type="text" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus: outline-none" />
+                            <input ref={title} defaultValue={data?.title} type="text" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus: outline-none" />
                             <p className="font-thin text-xs">Mention the key features of your item (e.g. brand, model, age, type)</p>
                         </div>
                         <div>
                             <p className="text-xs font-thin">Description</p>
-                            <textarea ref={description} name="Description" className=" border-black border-[1px] rounded resize-none w-[100%] h-[130px] font-thin focus: outline-none p-[10px]"></textarea>
+                            <textarea ref={description} defaultValue={data?.description} name="Description" className=" border-black border-[1px] rounded resize-none w-[100%] h-[130px] font-thin focus: outline-none p-[10px]"></textarea>
                             <p className="font-thin text-xs">Mention the key features of your item (e.g. brand, model, age, type)</p>
                         </div>
                         <div>
                             <p className="text-xs font-thin">Brand</p>
-                            <input ref={brand} type="text" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus: outline-none" />
+                            <input ref={brand} defaultValue={data?.brand} type="text" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus: outline-none" />
                             <p className="font-thin text-xs">Mention the key features of your item (e.g. brand, model, age, type)</p>
                         </div>
                         <div>
                             <p className="text-xs font-thin">Condition</p>
-                            <select ref={condition} defaultValue="" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus:outline-none text-xs">
+                            <select ref={condition} defaultValue={data?.condition} className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus:outline-none text-xs">
                                 <option className="font-thin text-xs" value="" disabled>Product Condition</option>
                                 <option className="font-thin text-xs" value="New">New</option>
                                 <option className="font-thin text-xs" value="Open box">Open box</option>
@@ -215,7 +216,7 @@ function UpdatePost() {
                             <p className="text-xs font-thin">Price</p>
                             <div className=" border-black w-[100%] rounded border-[1px] p-[10px] flex gap-3 justify-center items-center">
                                 <span className="p-[5px] border-r-[1px] border-black font-thin text-xs h-[18px] flex justify-center items-center">Rs</span>
-                                <input ref={price} type="number" className="w-[95%] font-thin border-none focus: outline-none " />
+                                <input ref={price} defaultValue={data?.price} type="number" className="w-[95%] font-thin border-none focus: outline-none " />
                             </div>
                         </div>
                     </div>
@@ -228,7 +229,7 @@ function UpdatePost() {
                                     <input type="file" ref={imageObj1} accept="image/*" onChange={(e) => imageHandler(e.target.files[0], 0)} className="hidden " />
                                     <div className={`w-[98%] p-[5px] h-[80px] ${image1 !== false ? "border-gray-700" : "border-red-700"}  border-[2px] flex justify-center`}>
                                         <div className="w-[50%]  flex items-center justify-center">
-                                            <img src={image1 ? image1 : addpic} alt="" />
+                                            <img src={image1 ? image1 : data?.product_img_url[0]} alt="" />
                                         </div>
                                     </div>
                                 </label>
@@ -236,7 +237,7 @@ function UpdatePost() {
                                     <input ref={imageObj2} type="file" accept="image/*" onChange={(e) => imageHandler(e.target.files[0], 1)} className="hidden" />
                                     <div className={`w-[98%] p-[5px] h-[80px] ${image2 !== false ? "border-gray-700" : "border-red-700"}  border-[2px] flex justify-center`}>
                                         <div className="w-[50%] flex items-center justify-center">
-                                            <img src={image2 ? image2 : addpic} alt="" />
+                                            <img src={image2 ? image2 : data?.product_img_url[1] ? data?.product_img_url[1] :addpic} alt="" />
                                         </div>
                                     </div>
                                 </label>
@@ -251,7 +252,7 @@ function UpdatePost() {
                         <h1 className="text-gray-900 font-bold">YOUR AD'S LOCATION</h1>
                         <div>
                             <p className="text-xs font-thin">Loaction</p>
-                            <input ref={location} type="text" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus: outline-none" />
+                            <input ref={location} defaultValue={data?.location} type="text" className="w-[100%] border-black font-thin border-[1px] rounded p-[10px] focus: outline-none" />
                         </div>
                     </div>
                     <div className="pt-[10px] pl-[20px] pr-[20px] pb-[20px] border-gray-500 border-b-[1px] flex flex-col gap-5 ">
@@ -260,12 +261,12 @@ function UpdatePost() {
                             <p className="text-xs font-thin">Mobile Phone Number</p>
                             <div className=" border-black w-[100%] rounded border-[1px] p-[10px] flex gap-3 justify-center items-center">
                                 <span className="p-[5px] border-r-[1px] border-black font-thin text-xs h-[18px] flex justify-center items-center">+92</span>
-                                <input ref={phoneNo} type="number" className="w-[95%] font-thin border-none focus: outline-none " placeholder="Phone Number" />
+                                <input ref={phoneNo} defaultValue={data?.phone_no} type="number" className="w-[95%] font-thin border-none focus: outline-none " placeholder="Phone Number" />
                             </div>
                         </div>
                     </div>
                     <div className="p-[20px]">
-                        <button disabled={isLoading} className={`${isLoading ? "cursor-not-allowed" : "cursor-pointer"} flex pt-[5px] pb-[5px] pr-[15px] pl-[15px] bg-green-800 rounded text-white font-bold`}>{isLoading ? <CircularProgress size={"1.5rem"} sx={{ color: "#fff" }} /> : "Post now"}</button>
+                        <button disabled={updateLoading} className={`${updateLoading ? "cursor-not-allowed" : "cursor-pointer"} flex pt-[5px] pb-[5px] pr-[15px] pl-[15px] bg-green-800 rounded text-white font-bold`}>{updateLoading ? <CircularProgress size={"1.5rem"} sx={{ color: "#fff" }} /> : "Update now"}</button>
                     </div>
 
                 </form>

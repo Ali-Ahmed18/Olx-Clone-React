@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import BACKEND_URI from "../../../public/backend/uri.js"
 
 
 const initialState = {
   loading: true,
   data : {},
   isLiked : false,
-  error : ""
+  error : false
 };
 
 const singlePostSlice = createSlice({
@@ -22,13 +23,13 @@ const singlePostSlice = createSlice({
     builder.addCase(singlePostAction.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload.data.data
-      state.error = ""
+      state.error = false
       state.isLiked = action.payload.data.data.likes.includes(action.payload.userId);
     });
     builder.addCase(singlePostAction.rejected, (state, action) => {
       state.loading = false;
       state.data = {}
-      state.error = action.payload
+      state.error = true
       
     });
   },
@@ -36,15 +37,16 @@ const singlePostSlice = createSlice({
 
 export const singlePostAction = createAsyncThunk(
   "singlePost/singlePostApi",
-  async ({ id ,userId}, { rejectWithValue }) => {
+  async ({ id ,userId,navigate}, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await axios.get(
-        `http://localhost:5000/api/v1/post/${id}`,
+        `${BACKEND_URI}/api/v1/post/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return {data :response.data, userId};
     } catch (err) {
+      navigate("/404page")
       return rejectWithValue(err.message);
     }
   }

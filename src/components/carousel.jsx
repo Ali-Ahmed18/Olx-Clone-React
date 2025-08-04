@@ -23,7 +23,7 @@ export default function Carousel({ children, autoSlide = false, autoSlideInterva
         {children}
       </div>
       <div className="absolute inset-0 flex items-center justify-between p-4">
-        {children.length != 1 ? <>
+        {children?.length != 1 ? <>
           <button
           onClick={prev}
           className="p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white"
@@ -42,7 +42,7 @@ export default function Carousel({ children, autoSlide = false, autoSlideInterva
 
       <div className="absolute bottom-4 right-0 left-0">
         <div className="flex items-center justify-center gap-2">
-          {children.map((_, i) => (
+          {children?.map((_, i) => (
             <div key={i}
               className={`
               transition-all w-3 h-3 bg-white rounded-full

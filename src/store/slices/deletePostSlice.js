@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { myAdsAction } from "./myAdsSlice";
-
+import BACKEND_URI from "../../../public/backend/uri.js"
 const initialState = {
   isDelete: false,
 };
@@ -11,7 +11,7 @@ export const isDeletedAction = createAsyncThunk("isDelete/deletepost", async ({_
     
       const token = localStorage.getItem("authToken");
       const response = await axios.delete(
-        `http://localhost:5000/api/v1/post/${_id}`,
+        `${BACKEND_URI}/api/v1/post/${_id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
         dispatch(myAdsAction(user_id))

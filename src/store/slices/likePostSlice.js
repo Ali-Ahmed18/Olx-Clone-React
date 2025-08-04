@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios"
 import { loginAction } from "./loginSilce";
+import BACKEND_URI from "../../../public/backend/uri.js"
 
 const initialState = {
     isLike :false
@@ -26,7 +27,7 @@ const likePostSlice = createSlice({
 export const likePostAction = createAsyncThunk("likePost/likePostApi", async ({id,userId},{rejectWithValue,dispatch}) => {
     try{
         const token = localStorage.getItem("authToken")
-        const response = await axios.put(`http://localhost:5000/api/v1/${id}/like`,{id, userId},{ headers: { Authorization: `Bearer ${token}` } })
+        const response = await axios.put(`${BACKEND_URI}/api/v1/${id}/like`,{id, userId},{ headers: { Authorization: `Bearer ${token}` } })
         return response.data
     }catch(err){
         return rejectWithValue(err.message)

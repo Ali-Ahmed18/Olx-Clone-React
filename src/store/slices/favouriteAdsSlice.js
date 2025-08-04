@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, isAction } from "@reduxjs/toolkit";
 import axios from "axios"
+import BACKEND_URI from "../../../public/backend/uri.js"
 
 
 const initialState = {
@@ -31,7 +32,7 @@ const favouriteAdsSlice = createSlice({
 export const favouriteAdsAction = createAsyncThunk("favouriteAds/getFavouriteAds", async (id,{rejectWithValue}) => {
     try{
         const token = localStorage.getItem("authToken")
-        const response = await axios.get(`http://localhost:5000/api/v1/likeposts/${id}`,{ headers: { Authorization: `Bearer ${token}` } })
+        const response = await axios.get(`${BACKEND_URI}/api/v1/likeposts/${id}`,{ headers: { Authorization: `Bearer ${token}` } })
         return response.data
     }catch(err){
         return rejectWithValue(err.message)
